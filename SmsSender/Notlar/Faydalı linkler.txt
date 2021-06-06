@@ -1,0 +1,2 @@
+﻿https://www.toolsqa.com/selenium-c-sharp/
+https://www.automatetheplanet.com/selenium-webdriver-csharp-cheat-sheet/

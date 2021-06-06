@@ -17,3 +17,10 @@ public static IWebElement WaitUntilElementClickable(By elementLocator, int timeo
             throw;
         }
     }
+
+// Wait for visibility of an element
+WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(30));
+wait.Until(ExpectedConditions.VisibilityOfAllElementsLocatedBy(
+By.XPath("//*[@id='tve_editor']/div[2]/div[2]/div/div")));
+
+wait.Until(ExpectedConditions.ElementIsVisible(elementLocator));
