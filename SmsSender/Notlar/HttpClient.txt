@@ -1,0 +1,28 @@
+﻿readonly HttpClient client = new HttpClient();
+var values = new Dictionary<string, string>
+{
+    { "username", "myUser" },
+    { "password", "myPassword" }
+};
+
+string url = "http://www.example.com"
+var data = new FormUrlEncodedContent(values);
+var response = await client.PostAsync(url, data);
+
+static async Task MainAsync()
+    {
+        using (var client = new HttpClient())
+        {
+            var values = new Dictionary<string, string>
+            {
+                { "username", "myUser" },
+                { "password", "myPassword" }
+            };
+
+            string url = "http://www.example.com"
+
+            var result = await client.PostAsync(url, content);
+            string resultContent = await result.Content.ReadAsStringAsync();
+            Console.WriteLine(resultContent);
+        }
+    }
