@@ -6,10 +6,15 @@ using System.Threading.Tasks;
 
 namespace SmsSender
 {
-    class Sms
+    public class Sms
     {
         public int Id { get; set; }
         public string PhoneNumber { get; set; }
         public string Message { get; set; }
+    }
+    public class SmsRequest
+    {
+        public string phonenumber { get; set; }
+        public string message { get; set; }
     }
 }

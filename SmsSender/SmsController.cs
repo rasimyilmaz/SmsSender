@@ -23,9 +23,10 @@ namespace SmsSender
         }
 
         // POST api/sms
-        public void Post([FromBody] string value)
+        public void Post([FromBody] SmsRequest request)
         {
-            Console.WriteLine(value);
+            Console.WriteLine("Post Message");
+            
         }
 
         /*
