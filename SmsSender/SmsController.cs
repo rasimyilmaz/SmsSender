@@ -10,6 +10,7 @@ namespace SmsSender
 {
     public class SmsController : ApiController
     {
+
         // GET api/sms
         public IEnumerable<string> Get()
         {
@@ -22,11 +23,12 @@ namespace SmsSender
             return id;
         }
 
+        
         // POST api/sms
         public void Post([FromBody] SmsRequest request)
         {
             Console.WriteLine("Post Message");
-            
+            Program.Send(request);
         }
 
         /*
