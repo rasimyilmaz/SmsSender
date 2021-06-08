@@ -5,7 +5,9 @@ using OpenQA.Selenium.Support.UI;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web.Http;
@@ -15,71 +17,48 @@ namespace SmsSender
 {
     class Program
     {
-        static IWebDriver driver;
-        public static void Send(SmsRequest request)
-        {
-            try
-            {
-                var stopwatch = new Stopwatch();
-                stopwatch.Start();
-                driver.Url = "http://m.home/index.html#sms";
-                IWebElement newSms = WaitUntilElementClickable(By.Id("smslist-new-sms"), 30);
-                newSms.Click();
-                IWebElement phone = WaitUntilElementClickable(By.Id("chosen-search-field-input"));
-                phone.Click();
-                phone.SendKeys(request.phonenumber);
-                phone.SendKeys(Keys.Return);
-                IWebElement chat = WaitUntilElementClickable(By.Id("chat-input"));
-                chat.SendKeys(request.message);
-                IWebElement sendButton = WaitUntilElementClickable(By.Id("btn-send"));
-                sendButton.Click();
-                sendButton = WaitUntilElementClickable(By.Id("btn-send"),30);
-                IWebElement deleteButton = WaitUntilElementClickable(By.ClassName("smslist-item-delete"));
-                deleteButton.Click();
-                IWebElement sureButton = WaitUntilElementClickable(By.Id("yesbtn"));
-                sureButton.Click();
-                sendButton = WaitUntilElementClickable(By.Id("btn-send"), 30);
-                stopwatch.Stop();
-                Console.WriteLine("Total processing time :" + stopwatch.ElapsedMilliseconds.ToString());
-            }
-            catch ( Exception Ex)
-            {
-                Console.WriteLine(Ex.Message);
-            }
-            
-        }
-        public static void DeleteAllMessages()
-        {
-            driver.Url = "";
-            IWebElement checkAll = WaitUntilElementClickable(By.Id("checkbox-all"), 30);
-            checkAll.Click();
-
-
-        }
-        public static IWebElement WaitUntilElementClickable(By elementLocator, int timeout = 10)
-        {
-            try
-            {
-                var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(timeout));
-                return wait.Until(ExpectedConditions.ElementToBeClickable(elementLocator));
-            }
-            catch (NoSuchElementException)
-            {
-                Console.WriteLine("Element with locator: '" + elementLocator + "' was not found in current context page.");
-                throw;
-            }
-        }
+        
         static void Main(string[] args)
         {
-            driver = new ChromeDriver();
-            using (WebApp.Start<Startup>("http://localhost:12345"))
-            {
-                Console.WriteLine("Web Server is running.");
-                Console.WriteLine("Press any key to quit");
-                Console.ReadLine();
-            }
-            driver.Quit();
+
+            File.AppendAllText("WriteLines.txt", DateTime.Now.ToString("HH:mm:ss.ffffff") + " - " + System.Threading.Thread.CurrentThread.ManagedThreadId.ToString() + " : Program Main called \n");
+            Controller controller = new Controller();
+                string input = "";
+                while (input != "-1")
+                {
+                    Console.WriteLine("1 to Run , 0 to Stop, -1 to Exit");
+                    input = Console.ReadLine();
+                    if (input == "1")
+                    {
+                        if (controller.isRunning)
+                        {
+                            Console.WriteLine("Web Server is already running.");
+                        } else
+                        {
+                            controller.Start();
+                            Console.WriteLine("Web Server is running.");
+                        }
+                    } else if (input == "0")
+                    {
+                        if (!controller.isRunning)
+                        {
+                            Console.WriteLine("Web Server is not running.");
+                        }
+                        else
+                        {
+                            controller.Stop();
+                            Console.WriteLine("Web Server is stopped.");
+                        }
+                    } else if (input == "-1")
+                    {
+                        if (controller.isRunning)
+                        {
+                            controller.Stop();
+                            Console.WriteLine("Web Server is stopped.");
+                        }
+                    }
+                }
+            controller = null;
         }
-        
     }
 }

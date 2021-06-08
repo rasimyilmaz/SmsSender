@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
@@ -10,50 +11,16 @@ namespace SmsSender
 {
     public class SmsController : ApiController
     {
+        public Robot RobotInstance = Robot.Instance;
 
-        // GET api/sms
-        public IEnumerable<string> Get()
+        public SmsResponse Post([FromBody] SmsRequest request)
         {
-            return new string[] { "Hello", "World" };
-        }
 
-        // GET api/sms/1
-        public int Get(int id)
-        {
-            return id;
-        }
+            RobotInstance.PushRequest(request);
+            File.AppendAllText("WriteLines.txt", DateTime.Now.ToString("HH:mm:ss.ffffff") + " - " + System.Threading.Thread.CurrentThread.ManagedThreadId.ToString() + " : Controller.Post\n");
 
-        
-        // POST api/sms
-        public void Post([FromBody] SmsRequest request)
-        {
-            Console.WriteLine("Post Message");
-            Program.Send(request);
-        }
+            return new SmsResponse { code = 100, id = request.id, message = "İşlem sıraya alındı.",timestamp=DateTime.Now.ToString() };
 
-        /*
-        Sms[] smss = new Sms[]
-        {
-            new Sms{Id=1,PhoneNumber="05541461471",Message="Hello"},
-            new Sms{Id=2,PhoneNumber="05541461471",Message="How are you ?"}
-        };
-        public IEnumerable<Sms> GetAllSmss()
-        {
-            return smss;
         }
-        public Sms GetSmsById(int id)
-        {
-            var sms = smss.FirstOrDefault((p) => p.Id == id);
-            if (sms == null)
-            {
-                throw new HttpResponseException(HttpStatusCode.NotFound);
-            }
-            return sms;
-        }
-        public IEnumerable<Sms> GetSmssByPhoneNumber(string phonenumber)
-        {
-            return smss.Where(p => string.Equals(p.PhoneNumber, phonenumber,
-                    StringComparison.OrdinalIgnoreCase));
-        }*/
     }
 }
