@@ -115,6 +115,7 @@ namespace SmsSender
                 {
                     stopwatch.Start();
                     driver.Url = "http://m.home/index.html#sms";
+                    new WebDriverWait(driver, 60).until(ExpectedConditions.invisibilityOfElementLocated(By.Id("loading")));
                     IWebElement newSms = WaitUntilElementClickable(By.Id("smslist-new-sms"), 30);
                     newSms.Click();
                     IWebElement phone = WaitUntilElementClickable(By.Id("chosen-search-field-input"));
